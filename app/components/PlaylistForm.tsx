@@ -10,17 +10,65 @@ export default function PlaylistForm() {
   const [url, setUrl] = useState('');
   const [file, setFile] = useState<File | null>(null);
   const [xtream, setXtream] = useState({ username: '', password: '', url: '' });
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(''); 
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Integrar com parsing e validação
+    setIsLoading(true);
+
+   // Evita múltiplos envios
+  if (isLoading) return;
+  
+  setIsLoading(true);
+  setError(''); // Limpa erros anteriores
+
+  try {
+    let channels: Channel[] = [];
+
+    if (type === 'M3U_URL' && url) {
+      const response = await fetch(url);
+      if (!response.ok) throw new Error('Falha ao carregar a playlist');
+      const text = await response.text();
+      channels = parseM3U(text);
+    } 
+    else if (type === 'M3U_FILE' && file) {
+      const content = await file.text();
+      channels = parseM3U(content);
+    }
+
+    if (channels.length === 0) {
+      throw new Error('Nenhum canal encontrado na playlist');
+    }
+
+    // Armazenamento no localStorage (mantenha sua lógica atual)
+    const stored = JSON.parse(localStorage.getItem('playlists') || '[]');
+    stored.push({ name, channels, type, addedAt: new Date() });
+    localStorage.setItem('playlists', JSON.stringify(stored));
+
+    // Reset do formulário
+    setName('');
+    setUrl('');
+    setFile(null);
+    
     console.log({ type, name, url, file, xtream });
+    
+  } catch (err) {
+    setError(err instanceof Error ? err.message : 'Erro desconhecido');
+    console.error('Error:', err);
+    
+  } finally {
+    setIsLoading(false);
+  }
+
+    
   };
 
   return (
     <form onSubmit={handleSubmit} className="p-4 bg-white dark:bg-zinc-800 rounded-xl shadow-md space-y-4">
       <h2 className="text-xl font-semibold">Adicionar Playlist</h2>
-      
+      <p>http://ldns.live/get.php?username=cm8vzs&password=rw7ccf&type=m3u_plus&output=ts</p>
+      <p>http://ldns.live/get.php?username=cm8vzs&password=rw7ccf&type=m3u_plus&output=m3u8</p>
       <div className="flex space-x-2">
         {['M3U_URL', 'M3U_FILE', 'XTREAM'].map((t) => (
           <button
