@@ -29,3 +29,19 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Garante que o vídeo mantenha proporção */
+video {
+  aspect-ratio: 16 / 9;
+  background-color: #000;
+}
+
+/* Melhora a experiência mobile */
+@media (max-width: 640px) {
+  .mini-player {
+    width: 100%;
+    right: 0;
+    bottom: 0;
+    border-radius: 0;
+  }
+}

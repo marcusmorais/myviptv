@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { Channel, parseM3U } from '../lib/m3uParser';
 import { v4 as uuidv4 } from 'uuid';
 import { validateStream } from '../lib/validateStream';
+import MiniPlayer from './MiniPlayer';
 
 
 type PlaylistType = 'M3U_URL' | 'M3U_FILE' | 'XTREAM';
@@ -76,6 +77,8 @@ export default function PlaylistForm() {
 
       console.log({ id, type, name, url, file, xtream, channels });
 
+      MiniPlayer(url);
+
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro desconhecido');
       console.error('Error:', err);
@@ -90,7 +93,7 @@ export default function PlaylistForm() {
   return (
     <form onSubmit={handleSubmit} className="p-4 bg-white dark:bg-zinc-800 rounded-xl shadow-md space-y-4">
       <h2 className="text-xl font-semibold">Adicionar Playlist</h2>
-      <p>http://ldns.live/get.php?username=cm8vzs&password=rw7ccf&type=m3u_plus&output=ts</p>
+      <p>http://limed.cc:80/cm8vzs/rw7ccf/90035.m3u8</p>
       <p>http://ldns.live/get.php?username=cm8vzs&password=rw7ccf&type=m3u_plus&output=m3u8</p>
       <div className="flex space-x-2">
         {['M3U_URL', 'M3U_FILE', 'XTREAM'].map((t) => (
