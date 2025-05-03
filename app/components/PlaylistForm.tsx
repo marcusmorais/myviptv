@@ -1,67 +1,90 @@
 "use client";
 import { t } from 'i18next';
 import React, { useState } from 'react';
+import { Channel, parseM3U } from '../lib/m3uParser';
+import { v4 as uuidv4 } from 'uuid';
+import { validateStream } from '../lib/validateStream';
+
 
 type PlaylistType = 'M3U_URL' | 'M3U_FILE' | 'XTREAM';
 
 export default function PlaylistForm() {
   const [type, setType] = useState<PlaylistType>('M3U_URL');
+  const [id, setId] = useState(uuidv4());
   const [name, setName] = useState('');
   const [url, setUrl] = useState('');
   const [file, setFile] = useState<File | null>(null);
   const [xtream, setXtream] = useState({ username: '', password: '', url: '' });
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(''); 
+  const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
-   // Evita múltiplos envios
-  if (isLoading) return;
-  
-  setIsLoading(true);
-  setError(''); // Limpa erros anteriores
+    // Evita múltiplos envios
+    if (isLoading) return;
 
-  try {
-    let channels: Channel[] = [];
+    setIsLoading(true);
+    setError(''); // Limpa erros anteriores
+    setId(uuidv4());
 
-    if (type === 'M3U_URL' && url) {
-      const response = await fetch(url);
-      if (!response.ok) throw new Error('Falha ao carregar a playlist');
-      const text = await response.text();
-      channels = parseM3U(text);
-    } 
-    else if (type === 'M3U_FILE' && file) {
-      const content = await file.text();
-      channels = parseM3U(content);
+
+    try {
+      let channels: Channel[] = [];
+
+      
+      if (type === 'M3U_URL' && url) {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Falha ao carregar a playlist');
+        const text = await response.text();
+         parseM3U(text, channels );
+
+      }
+      else if (type === 'M3U_FILE' && file) {
+        const content = await file.text();
+        //channels = parseM3U(content);
+        parseM3U(content, channels );
+      }
+
+
+      console.log('channels.length: ' + channels.length);
+
+
+      if (!validateStream(url))
+        {
+        throw new Error('URL invalida!');
+      }
+
+      if (channels.length === 0) {
+        throw new Error('Nenhum canal encontrado na playlist');
+      }
+
+
+      // Armazenamento no localStorage (mantenha sua lógica atual)
+      const stored = JSON.parse(localStorage.getItem('playlists') || '[]');
+      //stored.push({ id, name, channels, type, addedAt: new Date(), url });
+      stored.push({ id, name, type, addedAt: new Date(), url });
+      localStorage.setItem('playlists', JSON.stringify(stored));
+
+      // Reset do formulário
+
+      setName('');
+      setId(uuidv4());
+      setUrl('');
+      setFile(null);
+
+      console.log({ id, type, name, url, file, xtream, channels });
+
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Erro desconhecido');
+      console.error('Error:', err);
+
+    } finally {
+      setIsLoading(false);
     }
 
-    if (channels.length === 0) {
-      throw new Error('Nenhum canal encontrado na playlist');
-    }
 
-    // Armazenamento no localStorage (mantenha sua lógica atual)
-    const stored = JSON.parse(localStorage.getItem('playlists') || '[]');
-    stored.push({ name, channels, type, addedAt: new Date() });
-    localStorage.setItem('playlists', JSON.stringify(stored));
-
-    // Reset do formulário
-    setName('');
-    setUrl('');
-    setFile(null);
-    
-    console.log({ type, name, url, file, xtream });
-    
-  } catch (err) {
-    setError(err instanceof Error ? err.message : 'Erro desconhecido');
-    console.error('Error:', err);
-    
-  } finally {
-    setIsLoading(false);
-  }
-
-    
   };
 
   return (
@@ -75,9 +98,8 @@ export default function PlaylistForm() {
             key={t}
             type="button"
             onClick={() => setType(t as PlaylistType)}
-            className={`px-4 py-2 rounded-full ${
-              type === t ? 'bg-blue-600 text-white' : 'bg-gray-200 dark:bg-zinc-700'
-            }`}
+            className={`px-4 py-2 rounded-full ${type === t ? 'bg-blue-600 text-white' : 'bg-gray-200 dark:bg-zinc-700'
+              }`}
           >
             {t}
           </button>
