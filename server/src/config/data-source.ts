@@ -1,6 +1,7 @@
 import { DataSource } from "typeorm";
 import { User } from "../entities/User";
 import { Playlist } from "../entities/Playlist";
+import { Channel } from "../entities/Channel";
 
 export const AppDataSource = new DataSource({
   type: "postgres",
@@ -11,7 +12,7 @@ export const AppDataSource = new DataSource({
   database: process.env.DB_NAME || "myviptv",
   synchronize: true,
   logging: false,
-  entities: [User, Playlist],
-  migrations: [],
+  entities: [User, Playlist, Channel],
+  migrations: ["src/migrations/*{.ts,.js}"],
   subscribers: [],
 });

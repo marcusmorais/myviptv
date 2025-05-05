@@ -1,16 +1,17 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
+import { Playlist } from "./Playlist";
 
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn("uuid")
+  id!: string; // Note o '!' para evitar TS2564
 
   @Column({ unique: true })
-  email: string;
+  email!: string;
 
   @Column()
-  name: string;
+  name!: string;
 
-  @Column()
-  passwordHash: string;
+  @OneToMany(() => Playlist, playlist => playlist.user)
+  playlists!: Playlist[];
 }
