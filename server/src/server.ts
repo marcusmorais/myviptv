@@ -1,6 +1,7 @@
 import express from 'express';
 import { AppDataSource } from "./config/data-source";
 import router from "./routes";
+import { setupSwagger } from './config/swagger';
 
 /*
 const app = express();
@@ -15,9 +16,12 @@ app.listen(PORT, () => {
 });
 */
 
+
 AppDataSource.initialize()
   .then(() => {
     const app = express();
+    
+    setupSwagger(app); 
     app.use(express.json());
     app.use("/api", router);
     
@@ -26,3 +30,5 @@ AppDataSource.initialize()
     });
   })
   .catch(console.error);
+
+  
