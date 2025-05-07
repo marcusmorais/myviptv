@@ -26,7 +26,10 @@ const options = {
       }
     }
   },
-  apis: ['./src/controllers/*.ts'] // Caminho para seus controllers
+  apis: ['./src/controllers/*.ts',
+         './src/entities/*.ts',
+         './src/dtos/*.ts'
+  ] // Caminho para os controllers
 };
 
 export const setupSwagger = (app: Express) => {

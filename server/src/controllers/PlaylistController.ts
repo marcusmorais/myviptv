@@ -1,11 +1,13 @@
 import { Request, Response } from "express";
 import { AppDataSource } from "../config/data-source";
 import { Playlist } from "../entities/Playlist";
+import { Controller, Get, Post, Body, Param } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Playlists')
-//@Controller('playlists')
+@Controller('playlists')
 export class PlaylistController {
+  @Post()
   @ApiOperation({ summary: 'Cria nova playlist' })
   @ApiResponse({ 
     status: 201, 
@@ -22,6 +24,7 @@ export class PlaylistController {
     });
     res.json(playlist);
   }
+ @Get()
  @ApiOperation({ summary: 'Lista todas as playlists' })
   @ApiResponse({
     status: 200,
