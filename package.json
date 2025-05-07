@@ -10,12 +10,14 @@
     "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix"
   },
   "dependencies": {
+    "@nestjs/swagger": "^11.2.0",
     "hls.js": "^1.6.2",
     "i18next": "^25.0.1",
     "next": "latest",
     "react": "latest",
     "react-dom": "latest",
     "react-i18next": "^15.5.1",
+    "swagger-ui-express": "^5.0.1",
     "uuid": "^11.1.0"
   },
   "devDependencies": {
