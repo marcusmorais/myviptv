@@ -13,6 +13,10 @@ export class Playlist {
   @Column()
   name!: string;
 
+  @ApiProperty({ example: '6327e6ef-338c-434b-9eca-1678590c01c2', description: 'Id do Usuario' })
+  @Column()
+  userId!: string;
+
   @ManyToOne(() => User, user => user.playlists)
   user!: User;
  

@@ -25,7 +25,7 @@ export class PlaylistController {
     res.json(playlist);
   }
  @Get()
- @ApiOperation({ summary: 'Lista todas as playlists' })
+ @ApiOperation({ summary: 'Lista todas as playlists de todos users' })
   @ApiResponse({
     status: 200,
     description: 'Lista de playlists retornada',
