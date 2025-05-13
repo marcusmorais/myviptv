@@ -28,7 +28,7 @@ export class UserController {
 
     } catch (error) {
       res.statusCode = 400;
-      console.error("Falha ao inserir novo user.");
+      console.error("Falha ao inserir novo user: " + error);
       res.json([]);
     }
   }
@@ -40,7 +40,7 @@ export class UserController {
     status: 200,
     description: 'Lista de users retornada',
     type: [User]
-  })
+  }) 
   async list(req: Request, res: Response) {
     const users = await AppDataSource.getRepository(User).find({});
     res.statusCode = 200;

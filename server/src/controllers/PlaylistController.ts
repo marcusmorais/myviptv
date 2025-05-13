@@ -22,8 +22,10 @@ export class PlaylistController {
       name,
       user: { id: userId }
     });
-    res.json(playlist);
+    ///res.json(playlist);
+    return res.status(201).json(playlist);
   }
+
  @Get()
  @ApiOperation({ summary: 'Lista todas as playlists de todos users' })
   @ApiResponse({

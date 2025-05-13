@@ -15,7 +15,7 @@ router.get("/users", userController.list);
 router.post("/playlists", playlistController.create);
 router.get("/playlists", playlistController.list);
 
-router.post("/playlists/:playlistId/channels", channelController.addToPlaylist);
+//router.post("/playlists/:playlistId/channels", channelController.addToPlaylist);
 router.get("/playlists/:playlistId/channels", channelController.listByPlaylist);
 
 export default router;

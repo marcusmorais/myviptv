@@ -3,6 +3,9 @@ import { AppDataSource } from "./config/data-source";
 import router from "./routes";
 import { setupSwagger } from './config/swagger';
 import { testConnection } from "./config/test-connection";
+import { errorHandler } from './core/middlewares/error-handler';
+
+
 /*
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -26,7 +29,9 @@ AppDataSource.initialize()
     app.listen(3001, () => {
       console.log("Server running on http://localhost:3001");
     });
+    app.use(errorHandler);
   })
   .catch(console.error);
+
 
   
