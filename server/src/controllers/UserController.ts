@@ -1,50 +1,60 @@
-import { Request, Response } from "express";
-import { AppDataSource } from "../config/data-source";
-import { User } from "../entities/User";
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, HttpStatus, HttpException } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { User } from '../entities/User';
+import { CreateUserDto } from '../dtos/CreateUser.dto';
 
 @ApiTags('Users')
 @Controller('users')
 export class UserController {
+   constructor(
+    @InjectRepository(User)
+    private userRepository: Repository<User>
+  ) {}
+
   @Post()
-  @ApiOperation({ summary: 'Cria novo user' })
+  @ApiOperation({ summary: 'Create new user / Criar novo usuario' })
   @ApiResponse({ 
-    status: 201, 
-    description: 'Usuario criado com sucesso',
+    status: HttpStatus.CREATED, 
+    description: 'User created succesfully / Usuario criado com sucesso',
     type: User 
   })
-  @ApiResponse({ status: 400, description: 'Dados inválidos' })
+  @ApiResponse({ 
+    status: HttpStatus.BAD_REQUEST, 
+    description: 'Invalid data / Dados invalidos' 
+  })
+  @ApiResponse({
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    description: 'Internal Server Error / Erro interno do servidor'
+  })
 
-  async create(req: Request, res: Response) {
+  async create(@Body() createUserDto: CreateUserDto): Promise<User> {
     try {
-        const { email, name } = req.body;
-        const user = await AppDataSource.getRepository(User).save({
-        email,
-        name
-      });
-      res.statusCode = 201;
-      res.json(user);
+        const user = this.userRepository.create(createUserDto);
+        return await this.userRepository.save(user);
 
     } catch (error) {
-      res.statusCode = 400;
-      console.error("Falha ao inserir novo user: " + error);
-      res.json([]);
+      //if (error.code === '23505') { // Violação de constraint única (email duplicado)
+      //  throw new HttpException('Email já cadastrado', HttpStatus.BAD_REQUEST);
+     // }
+      throw new HttpException(
+        'Erro ao criar usuário', 
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
     }
   }
   
 
  @Get()
- @ApiOperation({ summary: 'Lista todos os users' })
+ @ApiOperation({ summary: 'List all users / Lista todos os users' })
   @ApiResponse({
-    status: 200,
-    description: 'Lista de users retornada',
+    status: HttpStatus.OK,
+    description: 'User list returned / Lista de users retornada',
     type: [User]
   }) 
-  async list(req: Request, res: Response) {
-    const users = await AppDataSource.getRepository(User).find({});
-    res.statusCode = 200;
-    res.json(users);
+  async list(): Promise<User[]> {
+    return this.userRepository.find();
   }
 }
 
