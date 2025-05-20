@@ -1,10 +1,42 @@
-import { Controller, Get, Post, Body, HttpStatus, HttpException } from '@nestjs/common';
+import { Controller, Get, Post, Body, HttpStatus } from '@nestjs/common';
+import { UserService } from './users.service';
+import { CreateUserDto } from './dto/create.user.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { User } from '../entities/User';
-import { CreateUserDto } from '../dtos/CreateUser.dto';
 
+
+@ApiTags('users')
+@Controller('users')
+export class UserController {
+  
+  constructor(private readonly userService: UserService) {}
+
+  @ApiOperation({ summary: 'Cria um novo usuário' })
+  @ApiResponse({ 
+    status: HttpStatus.CREATED,
+    description: 'Usuário criado com sucesso',
+    type: CreateUserDto
+  })
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Dados inválidos' })
+  @Post()
+  async create(@Body() createUserDto: CreateUserDto) {
+    return this.userService.create(createUserDto);
+  }
+  
+  @ApiOperation({ summary: 'List all users / Lista todos os users' })
+  @Get()
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'User list returned / Lista de users retornada',
+    type: [CreateUserDto]
+  }) 
+  async list()  {
+    return this.userService.list();
+  }
+
+
+}
+
+/*
 @ApiTags('Users')
 @Controller('users')
 export class UserController {
@@ -58,4 +90,4 @@ export class UserController {
   }
 }
 
-
+*/

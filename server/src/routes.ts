@@ -1,9 +1,9 @@
 //import { Router } from "express";
-import { PlaylistController } from "./controllers/PlaylistController";
+import { PlaylistController } from "./playlists/playlists.controller";
 import { ChannelController } from "./controllers/ChannelController";
-import { UserController } from "./controllers/UserController";
-import { User } from "./entities/User";
-import { UserModule } from "./main";
+import { UserController } from "./users/users.controller";
+import { User } from "./users/entities/User.entity";
+//import { UserModule } from "./users/users.module";
 
 //const router = Router();
 

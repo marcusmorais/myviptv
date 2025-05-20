@@ -1,5 +1,5 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './main';
+import { AppModule } from './app.module';
 import { RouterModule } from '@nestjs/core/router';
 
 async function listRoutes() {
