@@ -1,11 +1,11 @@
-import { Controller, Get, Post, Body, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseFilters, HttpStatus } from '@nestjs/common';
 import { UserService } from './users.service';
 import { CreateUserDto } from './dto/create.user.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { HttpExceptionFilter } from '../common/filters/http-exception.filter';
 
-
-@ApiTags('users')
 @Controller('users')
+@UseFilters(HttpExceptionFilter)
 export class UserController {
   
   constructor(private readonly userService: UserService) {}

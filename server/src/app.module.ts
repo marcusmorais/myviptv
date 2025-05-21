@@ -1,24 +1,21 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+
 import { User } from './users/entities/User.entity';
 import { UserController } from './users/users.controller';
-//import { UsersModule } from './users/users.module';
-//import { User } from './users/entities/User.entity';
-//import { ChannelsModule } from './channels/channels.module';
-//import { PlaylistsModule } from './playlists/playlists.module';
+import { UsersModule } from './users/users.module';
 
-//Controllers
-/*
-import { UserController } from './users/users.controller';
-import { ChannelController } from './controllers/ChannelController';
-import { PlaylistController } from './controllers/PlaylistController';
+import { Channel } from "./channels/entities/Channel.entity";
+import { ChannelController } from './channels/channel.controller';
+import { ChannelsModule } from './channels/channels.module';
 
-//Entidades
-import { User } from './users/entities/User';
-import { Playlist } from "./entities/Playlist";
-import { Channel } from "./entities/Channel";
-*/
+
+import { Playlist } from "./playlists/entities/Playlist.entity";
+import { PlaylistsModule } from './playlists/playlists.module';
+import { PlaylistController } from './playlists/playlists.controller';
+
+
 
 /*
 @Module({
@@ -55,7 +52,7 @@ import { Channel } from "./entities/Channel";
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    //TypeOrmModule.forFeature([User]),
+    //TypeOrmModule.forFeature([User, Playlist]),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (config: ConfigService) => ({
@@ -66,18 +63,18 @@ import { Channel } from "./entities/Channel";
         password: config.get('DB_PASSWORD'),
         database: config.get('DB_DATABASE'),
         //entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        //entities: ["src/users/entities/*{.ts,.js}"],
+       // entities: ["src/users/entities/*{.ts,.js}"],
         //entities: [User],
         synchronize: true,
-        logging: true
+        logging: true,
+        autoLoadEntities: true, // Adicione esta linha
         //migrations: ["src/migrations/*{.ts,.js}"], 
       }), 
       inject: [ConfigService]
     })
-    //,
-    //UsersModule
-    //ChannelsModule,
-   // PlaylistsModule,
+    ,UsersModule,
+    ChannelsModule,
+    PlaylistsModule,
   ],
 })
 export class AppModule {}
