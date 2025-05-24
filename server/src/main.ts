@@ -31,7 +31,7 @@ async function bootstrap() {
   
   
   console.log('=====================');
-  console.log(`Swagger UI: http://localhost:3001/api`);
+  console.log(`Swagger UI: http://localhost:3001/myiptv-service/v1/swagger`);
 
 }
 bootstrap();
