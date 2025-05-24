@@ -2,8 +2,8 @@ import { Controller, Get, Post, Body, Param, HttpStatus, HttpException, Logger }
 import { ApiOperation, ApiResponse, ApiParam, ApiTags } from '@nestjs/swagger';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateChannelDto } from '../dtos/CreateChannel.dto';
-import { Channel } from '../entities/Channel';
+import { CreateChannelDto } from './dto/create.channel.dto';
+import { Channel } from './entities/Channel.entity';
 
 @ApiTags('Channels')
 @Controller('playlists/:playlistId/channels')

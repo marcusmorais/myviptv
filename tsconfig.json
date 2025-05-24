@@ -34,7 +34,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts"
-  ],
+, "server/src/users/dto/create.user.dto"  ],
   "exclude": [
     "node_modules"
   ]
