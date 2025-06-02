@@ -10,6 +10,14 @@ export class CreateChannelDto {
   })
   name!: string;
 
+  @IsString()
+  @ApiProperty({
+    example: 'BBB - CAM 2 [M]',
+    description: 'tvgName do canal',
+    required: true
+  })
+  tvgName!: string;
+
   @IsUrl()
   @ApiProperty({
     example: 'https://exemplo.com/stream.m3u8',
@@ -35,6 +43,24 @@ export class CreateChannelDto {
     required: false
   })
   tvgLogo?: string;
+
+  @IsOptional()
+  @IsString()
+  @ApiProperty({
+    example: 'CANAIS | BBB 2025',
+    description: 'Grupo do canal',
+    required: false
+  })
+  groupTitle?: string;
+
+
+  @IsString()
+  @ApiProperty({
+    example: 'bdcdfb17-09b0-4c5f-adb5-32fab54cc285',
+    description: 'Id da Playlist vinculada ao canal',
+    required: true
+  })
+  playlistId?: string;
 
   @IsOptional()
   @IsBoolean()

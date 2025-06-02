@@ -34,6 +34,11 @@ export class Channel {
   @Column({ nullable: true }) 
   groupTitle!: string;
 
+  @ApiProperty({ example: 'a1b2c3d4', description: 'ID único do Id da Playlist que pertence o canal' })
+  @Column({ type: "text" })
+  @Column({ nullable: false }) 
+  playlistId!: string;
+
   // Relacionamento
   @ManyToOne(() => Playlist, playlist => playlist.channels)
   playlist!: Playlist;
