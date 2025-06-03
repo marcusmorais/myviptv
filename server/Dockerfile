@@ -1,9 +1,17 @@
-FROM node:18-alpine
+FROM node:22.15.0
+
 
 WORKDIR /server
 
+COPY package*.json ./
+COPY tsconfig*.json ./
+
+RUN npm ci
+
 # Primeiro copia apenas os arquivos de dependências
-COPY package.json package-lock.json ./
+COPY package.json package-lock.json ./ 
+
+COPY  /dist ./dist
 
 RUN npm install
 

@@ -14,6 +14,15 @@ services:
 
   server:
     build: ./server
+    image: myviptv-server
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.1'
+          memory: 256M
     ports:
       - "3001:3001"
     depends_on:
@@ -27,6 +36,6 @@ services:
     volumes:
       - ./server:/server
       - /server/node_modules
-
+    
 volumes:
   postgres_data:

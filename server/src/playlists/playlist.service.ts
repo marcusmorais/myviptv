@@ -1,9 +1,10 @@
-import { Injectable, ConflictException, NotFoundException, BadRequestException, InternalServerErrorException } from '@nestjs/common';
+import { Injectable,  ConflictException, NotFoundException, BadRequestException, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, DeleteResult} from 'typeorm';
 import { Playlist } from './entities/Playlist.entity';
 import { CreatePlaylistDto } from './dto/create.playlist.dto';
 import { ValidatorError } from '../common/validates';
+//import { ChannelService } from "../channels/channel.service";
 
 @Injectable()
 export class PlaylistService {
@@ -73,18 +74,16 @@ export class PlaylistService {
     }
   }
 
-  async checkPlaylistIdExists(playlistId: string, userId: string): Promise<boolean> {
+  async validatePlaylistOwnership(playlistId: string, userId: string): Promise<boolean> {
 
     var validacao: boolean = true;
 
     // Primeiro verifica se é um UUID válido
     if (!this.validador.isValidUUID(playlistId)) {
-      //throw new BadRequestException('Invalid playlist ID format playlistId');
       validacao = false;
     }
 
     if (!this.validador.isValidUUID(userId)) {
-      // throw new BadRequestException('Invalid playlist ID format userId');
       validacao = false;
     }
 
@@ -97,11 +96,10 @@ export class PlaylistService {
     const exists = playlists.some(playlist => playlist.id === playlistId);
 
     if (!exists) {
-      // throw new NotFoundException(`Playlist with ID ${playlistId} not found for this user!`);
       validacao = false;
     }
 
-    console.log('Validacao: ' + validacao)
+    console.log('Playlist Ownership Validation: ' + validacao)
 
     return validacao;
   }

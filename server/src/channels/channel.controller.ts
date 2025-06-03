@@ -79,7 +79,6 @@ export class ChannelController {
   @ApiParam({ name: 'playlistId', description: 'ID da playlist' })
   @ApiParam({ name: 'channelId', description: 'ID do Canal' })
   @ApiQuery({ name: 'userId', type: String, required: true })
-  //@Controller('playlists/:playlistId/channels/:channelId')
   @Delete('/:channelId' )
   async deleteChannelsById(@Param('playlistId') playlistId: string,
                            @Query('userId') userId: string,
@@ -87,7 +86,7 @@ export class ChannelController {
   ) {
     try {
 
-      return this.channelService.deleteChannelFromPlaylist(playlistId, userId, channelId);
+      return this.channelService.deleteUniqueChannelFromPlaylist(playlistId, userId, channelId);
 
     } catch (error) {
 

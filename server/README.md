@@ -6,7 +6,7 @@ http://localhost:3001/api-docs
 Para gerar um arquivo OpenAPI:
 ```bash
 
-curl http://localhost:3001/api-docs-json > openapi.json
+curl http://localhost:3001/myiptv-service/v1/swagger
 
 ### Configuração do Ambiente
 

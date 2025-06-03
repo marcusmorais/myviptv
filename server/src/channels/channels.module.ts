@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ChannelController } from './channel.controller';
 import { ChannelService } from './channel.service';
@@ -7,7 +7,7 @@ import { PlaylistsModule } from '../playlists/playlists.module'; // Adicione est
 
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Channel]), PlaylistsModule],
+  imports: [TypeOrmModule.forFeature([Channel]), forwardRef(() => PlaylistsModule)],
   controllers: [ChannelController],
   providers: [ChannelService],
   exports: [ChannelService]

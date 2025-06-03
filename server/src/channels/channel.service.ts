@@ -20,21 +20,30 @@ export class ChannelService {
     try {
 
 
-      //valida se user eh dono da playlist selecionada
-      const playlist = await this.playlistService.checkPlaylistIdExists(playlistId, userId)
+      if (!this.validador.isValidUUID(userId)) {
+        throw new BadRequestException('Invalid UUID format for userId');
+      }
+
+      if (!this.validador.isValidUUID(playlistId)) {
+        throw new BadRequestException('Invalid UUID format for playlistId');
+      }
+
+      //Check if user is owner of the selected playlist
+      const playlist = await this.playlistService.validatePlaylistOwnership(playlistId, userId)
 
       if (playlist == false) {
 
         throw new NotFoundException(`Playlist with ID ${playlistId} not found for this user`);
       }
 
+      // Check if the channel already exists in the playlist
       const channel = this.channelRepository.create(CreateChannelDto);
-      
+
       return await this.channelRepository.save(channel);
 
     } catch (error) {
 
-      console.log('Erro ao gravar registro service.')
+      console.log('Error while save new channel service / Erro ao gravar registro service.')
       throw new ConflictException('Erro ao salvar novo canal.');
     }
   }
@@ -56,7 +65,7 @@ export class ChannelService {
       }
 
       //valida se user eh dono da playlist selecionada
-      const playlist = await this.playlistService.checkPlaylistIdExists(playlistId, userId)
+      const playlist = await this.playlistService.validatePlaylistOwnership(playlistId, userId)
 
       console.log('retorno check: ' + playlist)
 
@@ -105,16 +114,18 @@ export class ChannelService {
 
     try {
 
-      if (!this.validador.isValidUUID(userId)) {
-        throw new BadRequestException('Invalid UUID format for userId');
-      }
-
       if (!this.validador.isValidUUID(playlistId)) {
         throw new BadRequestException('Invalid UUID format for playlistId');
       }
 
-      //valida se user eh dono da playlist selecionada
-      const playlist = await this.playlistService.checkPlaylistIdExists(playlistId, userId)
+      if (!this.validador.isValidUUID(userId)) {
+        throw new BadRequestException('Invalid UUID format for userId');
+      }
+
+       //valida se user eh dono da playlist selecionada
+      const playlist = await this.playlistService.validatePlaylistOwnership(playlistId, userId)
+
+      console.log('retorno check: ' + playlist)
 
       if (playlist == false) {
 
@@ -125,12 +136,6 @@ export class ChannelService {
         playlistId: playlistId
       });
 
-      // Método alternativo: Usando query builder (para mais controle)
-      // const deleteResult = await this.channelRepository
-      //   .createQueryBuilder()
-      //   .delete()
-      //   .where("playlistId = :playlistId", { playlistId })
-      //   .execute();
 
       if (deleteResult.affected === 0) {
         throw new NotFoundException(`No channels found for playlist ${playlistId}`);
@@ -157,7 +162,7 @@ export class ChannelService {
     }
   }
 
-  async deleteChannelFromPlaylist(playlistId: string, userId: string, channeltId: string): Promise<DeleteResult> {
+  async deleteUniqueChannelFromPlaylist(playlistId: string, userId: string, channeltId: string): Promise<DeleteResult> {
 
     try {
 
@@ -174,7 +179,7 @@ export class ChannelService {
       }
 
       //valida se user eh dono da playlist selecionada
-      const playlist = await this.playlistService.checkPlaylistIdExists(playlistId, userId)
+      const playlist = await this.playlistService.validatePlaylistOwnership(playlistId, userId)
 
       if (playlist == false) {
 
@@ -185,13 +190,6 @@ export class ChannelService {
         id: channeltId,
         playlistId: playlistId
       });
-
-      // Método alternativo: Usando query builder (para mais controle)
-      // const deleteResult = await this.channelRepository
-      //   .createQueryBuilder()
-      //   .delete()
-      //   .where("playlistId = :playlistId", { playlistId })
-      //   .execute();
 
       if (deleteResult.affected === 0) {
         throw new NotFoundException(`No channels found for playlist ${playlistId}`);
